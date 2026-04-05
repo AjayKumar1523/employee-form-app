@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Form</title>
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: Arial;
+      padding: 30px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    input {
+      margin: 10px;
+      padding: 8px;
+      width: 200px;
+      background: black;
+      border: 1px solid white;
+      color: white;
+    }
+
+    button {
+      padding: 8px 15px;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    .success {
+      color: green;
+      margin-top: 10px;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+
+    .employee {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 400px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>New Employees</h2>
+
+  <input type="text" id="name" placeholder="Enter Name">
+  <input type="text" id="profession" placeholder="Enter Profession">
+  <input type="number" id="age" placeholder="Enter Age">
+
+  <br>
+  <button onclick="addEmployee()">Add User</button>
+
+  <div id="message"></div>
+
+  <h3>Added Employees</h3>
+  <div id="employeeList">You have 0 Employees.</div>
+
+  <script>
+    let employees = [];
+    let idCounter = 1;
+
+    function addEmployee() {
+      const name = document.getElementById("name").value.trim();
+      const profession = document.getElementById("profession").value.trim();
+      const age = document.getElementById("age").value.trim();
+      const message = document.getElementById("message");
+
+      // Validation
+      if (!name || !profession || !age) {
+        message.innerHTML = "<p class='error'>Error: Please make sure all fields are filled before adding an employee!</p>";
+        return;
+      }
+
+      // Add employee object
+      const newEmployee = {
+        id: idCounter++,
+        name: name,
+        profession: profession,
+        age: parseInt(age)
+      };
+
+      employees.push(newEmployee);
+
+      // Success message
+      message.innerHTML = "<p class='success'>Success: Employee Added!</p>";
+
+      // Clear inputs
+      document.getElementById("name").value = "";
+      document.getElementById("profession").value = "";
+      document.getElementById("age").value = "";
+
+      renderEmployees();
+    }
+
+    function renderEmployees() {
+      const list = document.getElementById("employeeList");
+
+      if (employees.length === 0) {
+        list.innerHTML = "You have 0 Employees.";
+        return;
+      }
+
+      list.innerHTML = "";
+
+      employees.map(emp => {
+        const div = document.createElement("div");
+        div.className = "employee";
+
+        div.innerHTML = `
+          <span>${emp.id}. Name: ${emp.name} | Profession: ${emp.profession} | Age: ${emp.age}</span>
+          <button onclick="deleteEmployee(${emp.id})">Delete User</button>
+        `;
+
+        list.appendChild(div);
+      });
+    }
+
+    function deleteEmployee(id) {
+      employees = employees.filter(emp => emp.id !== id);
+      renderEmployees();
+    }
+  </script>
+
+</body>
+</html>
